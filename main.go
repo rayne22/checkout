@@ -13,6 +13,8 @@ func main() {
 
 	http.Handle("/", http.FileServer(http.Dir("public")))
 	http.HandleFunc("/create-checkout-session", createCheckoutSession)
+	http.Handle("/success", http.FileServer(http.Dir("./success.html")))
+	http.Handle("/cancel", http.FileServer(http.Dir("./cancel.html")))
 	addr := "localhost:4242"
 	log.Printf("Listening on %s", addr)
 	log.Fatal(http.ListenAndServe(addr, nil))
@@ -32,8 +34,8 @@ func createCheckoutSession(w http.ResponseWriter, r *http.Request) {
 			"sepa_debit",
 		}),
 		Mode: stripe.String(string(stripe.CheckoutSessionModePayment)),
-		SuccessURL: stripe.String(domain + "/success.html"),
-		CancelURL: stripe.String(domain + "/cancel.html"),
+		SuccessURL: stripe.String(domain + "/success"),
+		CancelURL: stripe.String(domain + "/cancel"),
 	}
 
 	s, err := session.New(params)
